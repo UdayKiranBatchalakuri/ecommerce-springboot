@@ -1,23 +1,47 @@
 # Full Stack E-Commerce Application
 
-Spring Boot 3 (Java 17) + Spring Data JPA + MySQL + HTML/CSS/JavaScript frontend.
-The frontend is served by Spring Boot itself, so there is only **one app to run**.
+A full stack online store built with **Spring Boot**, **Spring Data JPA**, **MySQL** and a **HTML/CSS/JavaScript** frontend.
+The frontend is served by Spring Boot itself, so there is only one application to run.
+
+## Screenshots
+
+| Store | Cart |
+|---|---|
+| ![Store](docs/screenshots/store.png) | ![Cart](docs/screenshots/cart.png) |
+
+| My Orders | Admin panel |
+|---|---|
+| ![Orders](docs/screenshots/orders.png) | ![Admin](docs/screenshots/admin.png) |
 
 ## Features
-- **Products**: list, search, filter by category, add/update/delete (admin), stock tracking
-- **Categories**
-- **Auth**: register / login, passwords hashed with BCrypt, roles USER / ADMIN
-- **Cart**: add, remove, view per user (with stock check)
-- **Orders**: checkout is one `@Transactional` operation (validates stock, reduces stock, saves price at purchase time, clears cart), order history, admin can change order status
-- **Global exception handling**: clean JSON errors like `{"error": "Cart is empty"}`
-- Demo data is added on first start (3 categories, 10 products, 1 admin user)
+
+- **Products:** list, search, filter by category, stock tracking
+- **Categories:** products grouped by category
+- **Authentication:** register and login, passwords hashed with BCrypt, roles `USER` and `ADMIN`
+- **Cart:** add and remove items per user, with a stock check
+- **Orders:** checkout in one `@Transactional` method (validates stock, reduces stock, saves the price at purchase time, clears the cart) and order history
+- **Admin panel:** add or delete products, view all orders, update order status
+- **Error handling:** clean JSON errors such as `{"error": "Cart is empty"}`
+- **Demo data:** 3 categories, 10 products and an admin user are created on first start
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Java 17, Spring Boot 3, Spring Web, Spring Data JPA, Bean Validation |
+| Security | BCrypt password hashing (spring-security-crypto) |
+| Database | MySQL 8 (H2 in-memory option for quick demos) |
+| Frontend | HTML, CSS, JavaScript (fetch API) |
+| Build | Maven (Maven Wrapper included) |
 
 ## Architecture
+
 ```
-Controller  ->  Service  ->  Repository  ->  Database
-(REST/JSON)    (business     (Spring Data
-                logic)        JPA)
+Browser (HTML/JS)  ->  Controller  ->  Service  ->  Repository  ->  MySQL
+                       (REST/JSON)    (business     (Spring Data
+                                       logic)        JPA)
 ```
+
 ```
 src/main/java/com/uday/ecommerce
   entity/      Product, Category, User, CartItem, Order, OrderItem
@@ -27,66 +51,75 @@ src/main/java/com/uday/ecommerce
   config/      AppConfig (BCrypt bean), DataSeeder (demo data)
   exception/   GlobalExceptionHandler
 src/main/resources
-  application.properties       (MySQL settings)
-  application-h2.properties    (in-memory DB profile)
+  application.properties       MySQL settings
+  application-h2.properties    in-memory database profile
   static/                      index.html, style.css, app.js
 ```
 
-## Requirements
-- JDK 17 or newer (`java -version`)
-- Either **MySQL 8** or nothing (use the H2 option below)
-- VS Code with "Extension Pack for Java" and "Spring Boot Extension Pack" (optional, you can also use the terminal)
+## Getting Started
 
-## Run it (Option A: MySQL)
-1. Open `src/main/resources/application.properties` and set `spring.datasource.password` to your MySQL root password.
-   The database `ecommerce_db` is created automatically.
-2. In a terminal inside this folder:
+### Requirements
+- JDK 17 or newer (`java -version`)
+- MySQL 8 (or use the H2 option below)
+
+### Run with MySQL
+1. Clone the repository:
+   ```
+   git clone https://github.com/UdayKiranBatchalakuri/ecommerce-springboot.git
+   cd ecommerce-springboot
+   ```
+2. Open `src/main/resources/application.properties` and set your MySQL password:
+   ```
+   spring.datasource.password=YOUR_MYSQL_PASSWORD
+   ```
+   The `ecommerce_db` database is created automatically.
+3. Start the app:
    - Windows: `.\mvnw.cmd spring-boot:run`
    - Mac/Linux: `./mvnw spring-boot:run`
-   (the first run downloads Maven and the libraries, so it needs internet and takes a few minutes)
-3. Open http://localhost:8080
+4. Open http://localhost:8080
 
-## Run it (Option B: H2, no MySQL needed)
-Data is kept in memory and is lost when you stop the app. Good for a quick demo.
-- Windows PowerShell: `.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=h2"`
-- Mac/Linux: `./mvnw spring-boot:run -Dspring-boot.run.profiles=h2`
+### Run with H2 (no MySQL needed)
+Data is kept in memory and lost when the app stops.
+```
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=h2"
+```
 
-## Run from VS Code
-Open the folder, wait for the Java extension to finish importing the project, then press **F5**
-and choose "Ecommerce (MySQL)" or "Ecommerce (H2 - no MySQL needed)".
-
-## Demo login
-- Admin: `admin@store.com` / `admin123` (shows an **Admin** tab: add/delete products, update order status)
-- Or click **Register** to create a normal customer account.
+### Demo accounts
+- **Admin:** `admin@store.com` / `admin123`
+- **Customer:** click Register on the login page
 
 ## REST API
+
 | Method | URL | Purpose |
 |---|---|---|
-| GET | `/api/products?q=&page=0&size=12` | List / search products |
-| GET | `/api/products/{id}` | One product |
-| POST / PUT / DELETE | `/api/products[/{id}]` | Create / update / delete product |
-| GET / POST | `/api/categories` | List / create categories |
-| POST | `/api/auth/register` | Register `{name,email,password}` |
-| POST | `/api/auth/login` | Login `{email,password}` |
+| GET | `/api/products?q=&page=0&size=12` | List and search products |
+| GET | `/api/products/{id}` | Get one product |
+| POST / PUT / DELETE | `/api/products[/{id}]` | Create, update, delete a product |
+| GET / POST | `/api/categories` | List or create categories |
+| POST | `/api/auth/register` | Register a user |
+| POST | `/api/auth/login` | Log in |
 | GET | `/api/cart/{userId}` | View cart |
 | POST | `/api/cart/{userId}/add?productId=1&qty=1` | Add to cart |
-| DELETE | `/api/cart/item/{itemId}` | Remove cart item |
-| POST | `/api/orders/{userId}/checkout` | Place order from cart |
+| DELETE | `/api/cart/item/{itemId}` | Remove a cart item |
+| POST | `/api/orders/{userId}/checkout` | Place an order from the cart |
 | GET | `/api/orders/{userId}` | Order history |
 | GET | `/api/orders/all` | All orders (admin view) |
 | PUT | `/api/orders/{orderId}/status?status=SHIPPED` | Update order status |
 
-## Known limitations / next steps
-This version identifies the logged-in user by id stored in the browser, so the API is **not** secured by tokens.
-Planned improvements:
-1. Spring Security + JWT, with role-based access (ADMIN-only product and order management)
-2. Payment integration (Razorpay test mode)
-3. DTOs for requests/responses
-4. Docker + deployment on AWS EC2/RDS
-5. React frontend
+## Database Tables
 
-## Troubleshooting
-- `Access denied for user 'root'`: wrong MySQL password in `application.properties`.
-- `Communications link failure`: MySQL service is not running (Windows: Services -> MySQL80 -> Start), or use Option B.
-- `Port 8080 already in use`: change `server.port` in `application.properties`.
-- Page shows "User not found" after you reset the database: click **Logout** and log in again.
+`users`, `categories`, `products`, `cart_items`, `orders`, `order_items`
+
+## Future Improvements
+
+- Spring Security with JWT and role-based access control
+- Payment integration (Razorpay test mode)
+- DTOs for requests and responses
+- Docker and deployment on AWS (EC2 and RDS)
+- React frontend
+
+## Author
+
+**Batchalakuri Uday Kiran**
+B.Tech CSE, VVIT Guntur
+GitHub: [UdayKiranBatchalakuri][https://github.com/UdayKiranBatchalakuri]
