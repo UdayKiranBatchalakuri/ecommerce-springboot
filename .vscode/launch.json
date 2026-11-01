@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Ecommerce (MySQL)",
+      "request": "launch",
+      "mainClass": "com.uday.ecommerce.EcommerceApplication",
+      "projectName": "ecommerce"
+    },
+    {
+      "type": "java",
+      "name": "Ecommerce (H2 - no MySQL needed)",
+      "request": "launch",
+      "mainClass": "com.uday.ecommerce.EcommerceApplication",
+      "projectName": "ecommerce",
+      "args": "--spring.profiles.active=h2"
+    }
+  ]
+}

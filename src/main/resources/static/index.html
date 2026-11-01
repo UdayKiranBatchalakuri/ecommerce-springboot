@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Store</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h2>🛒 My Store</h2>
+  <nav id="nav">
+    <button onclick="show('products')">Products</button>
+    <button onclick="show('cart')">Cart</button>
+    <button onclick="show('orders')">My Orders</button>
+    <button id="adminBtn" onclick="show('admin')" style="display:none">Admin</button>
+    <span id="who"></span>
+    <button onclick="logout()">Logout</button>
+  </nav>
+</header>
+
+<div id="toast"></div>
+
+<section id="auth">
+  <div class="box">
+    <h3>Login / Register</h3>
+    <input id="name" placeholder="Name (register only)">
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="auth('login')">Login</button>
+    <button class="secondary" onclick="auth('register')">Register</button>
+    <p class="hint">Demo admin: admin@store.com / admin123</p>
+  </div>
+</section>
+
+<section id="products">
+  <div class="toolbar">
+    <input id="search" placeholder="Search products..." oninput="renderProducts()">
+    <select id="catFilter" onchange="renderProducts()"><option value="">All categories</option></select>
+  </div>
+  <div class="grid" id="plist"></div>
+</section>
+
+<section id="cart">
+  <h3>Your Cart</h3>
+  <div id="clist"></div>
+  <h3 id="ctotal"></h3>
+  <button onclick="checkout()">Place Order</button>
+</section>
+
+<section id="orders">
+  <h3>Your Orders</h3>
+  <div id="olist"></div>
+</section>
+
+<section id="admin">
+  <h3>Add Product</h3>
+  <div class="box wide">
+    <input id="pName" placeholder="Name">
+    <input id="pDesc" placeholder="Description">
+    <input id="pPrice" type="number" placeholder="Price">
+    <input id="pStock" type="number" placeholder="Stock">
+    <input id="pImage" placeholder="Image URL (optional)">
+    <select id="pCat"></select>
+    <button onclick="addProduct()">Add Product</button>
+  </div>
+  <h3>Manage Products</h3>
+  <div id="adminProducts"></div>
+  <h3>All Orders</h3>
+  <div id="adminOrders"></div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
